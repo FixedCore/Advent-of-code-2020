@@ -1,8 +1,8 @@
-def test_run_ends(instr, start):
+def test_run_ends(instr, start, visited):
 	pc = start
-	l_visited = [False]*len(instr)
-	while l_visited[pc]==False:
-		l_visited[pc]=True
+	#visited = [False]*len(instr)
+	while visited[pc]==False:
+		visited[pc]=True
 		if instr[pc][0]=='acc' or instr[pc][0]=='nop':
 			pc += 1
 		else:
@@ -37,10 +37,13 @@ while pc not in visited:
 		
 print("Finished! PC = {}, ACC = {}".format(pc, acc))
 
+visited_in_test = [False]*len(instructions)
+
 for starting_point in visited:
 	if instructions[starting_point][0]=='nop':
 		instructions[starting_point][0]='jmp'
-		res = test_run_ends(instructions, starting_point)
+		visited_in_test[starting_point]=False
+		res = test_run_ends(instructions, starting_point, visited_in_test)
 		if res:
 			print("Found one! Changed position {} from NOP to JMP".format(starting_point))
 			break
@@ -49,7 +52,8 @@ for starting_point in visited:
 			
 	elif instructions[starting_point][0]=='jmp':
 		instructions[starting_point][0]='nop'
-		res = test_run_ends(instructions, starting_point)
+		visited_in_test[starting_point]=False
+		res = test_run_ends(instructions, starting_point, visited_in_test)
 		if res:
 			print("Found one! Changed position {} from JMP to NOP".format(starting_point))
 			break
